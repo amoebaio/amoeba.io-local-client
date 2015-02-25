@@ -72,7 +72,7 @@ describe('LocalClient', function() {
                 assert.ok(false);
             });
         } catch (e) {
-            assert.equal(e.message, "Cannot call method 'apply' of undefined");
+            assert.equal(e.message, "Service 'auth' has no method 'unlogin'");
         }
     });
 });

@@ -1,6 +1,6 @@
 {
   "name": "amoeba.io-local-client",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Local Client for moeba.io",
   "main": "index.js",
   "directories": {
