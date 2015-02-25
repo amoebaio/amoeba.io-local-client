@@ -1,0 +1,17 @@
+{
+  "name": "amoeba.io-local-client",
+  "main": "index.js",
+  "version": "0.0.2",
+  "homepage": "https://github.com/amoebaio/amoeba.io-local-client",
+  "authors": [
+    "Maksym Pomazan"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
