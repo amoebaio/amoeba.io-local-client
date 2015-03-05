@@ -26,11 +26,11 @@ describe('LocalClient', function() {
 
     beforeEach(function() {
         amoeba = new Amoeba();
-        amoeba.service("auth", new LocalClient(new Auth()));
+        amoeba.use("auth", new LocalClient(new Auth()));
     });
 
     it('#invoke success', function(done) {
-        amoeba.service("auth").invoke("login", {
+        amoeba.use("auth").invoke("login", {
             login: 'admin',
             password: 'admin'
         }, function(err, data) {
@@ -42,7 +42,7 @@ describe('LocalClient', function() {
 
     it('#invoke error', function(done) {
 
-        amoeba.service("auth").invoke("login", {
+        amoeba.use("auth").invoke("login", {
             login: 'admins',
             password: 'admin'
         }, function(err, data) {
@@ -53,7 +53,7 @@ describe('LocalClient', function() {
     });
 
     it('#invoke scope test', function(done) {
-        amoeba.service("auth").invoke("scopeTest", {
+        amoeba.use("auth").invoke("scopeTest", {
             login: 'admin',
             password: 'admin'
         }, function(err, data) {
@@ -65,14 +65,14 @@ describe('LocalClient', function() {
 
     it('#invoke unknown method', function() {
         try {
-            amoeba.service("auth").invoke("unlogin", {
+            amoeba.use("auth").invoke("unlogin", {
                 login: 'admins',
                 password: 'admin'
             }, function(err, data) {
                 assert.ok(false);
             });
         } catch (e) {
-            assert.equal(e.message, "Service 'auth' has no method 'unlogin'");
+            assert.equal(e.message, "Object 'auth' has no method 'unlogin'");
         }
     });
 });

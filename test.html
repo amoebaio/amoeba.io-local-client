@@ -25,7 +25,7 @@
         }
     };
     var amoeba = new Amoeba();
-    amoeba.service("auth", new LocalClient(new Auth()));
+    amoeba.use("auth", new LocalClient(new Auth()));
     </script>
 
 
