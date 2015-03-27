@@ -8,19 +8,28 @@ Auth = function() {
 
 };
 
-Auth.prototype.method1 = function() {
+Auth.prototype.method1 = function(callback) {
     tester = 1;
+    if(callback){
+        assert.ok(false);
+    }
 };
 
 Auth.prototype.method2 = function(callback) {
     callback(null, "ok");
 };
 
-Auth.prototype.method3 = function(param) {
+Auth.prototype.method3 = function(param, callback) {
     tester = param.set;
+    if(callback){
+        assert.ok(false);
+    }
 };
-Auth.prototype.method4 = function(param1, param2, param3) {
+Auth.prototype.method4 = function(param1, param2, param3, callback) {
     tester = param1 + param2 + param3;
+    if(callback){
+        assert.ok(false);
+    }
 };
 Auth.prototype.method5 = function(param, callback) {
     callback(null, param.set);
@@ -96,7 +105,7 @@ describe('LocalClient', function() {
         });
     });
 
-    it('#invoke param method with callback', function(done) {
+    it('#invoke params method with callback', function(done) {
         amoeba.use("auth").invoke("method6", [1, 2, 3], function(err, result) {
             assert.equal(result, 6);
             done();

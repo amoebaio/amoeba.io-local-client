@@ -17,6 +17,7 @@ LocalClient.prototype.invoke = function(context, callback) {
             this.use[context.request.method].apply(this.use, [context.request.params, callback]);
         }else{
             var params = context.request.params;
+            //FIXME
             params.push(callback);
             this.use[context.request.method].apply(this.use, params);
         }
