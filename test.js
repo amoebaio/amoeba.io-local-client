@@ -1,3 +1,5 @@
+var tester = 0;
+
 QUnit.test("LocalClient", function(assert) {
     amoeba.use("auth").invoke("login", {
         login: 'admin',
