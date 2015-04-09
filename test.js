@@ -1,18 +1,17 @@
-var tester = 0;
 
 QUnit.test("LocalClient", function(assert) {
     amoeba.use("auth").invoke("login", {
         login: 'admin',
         password: 'admin'
-    }, function(err, data) {
+    }, function(err, result) {
         assert.equal(err, null);
-        assert.equal(data.res, "login ok");
+        assert.equal(result.res, "login ok");
     });
     amoeba.use("auth").invoke("login", {
         login: 'admins',
         password: 'admin'
-    }, function(err, data) {
-        assert.equal(data, null);
+    }, function(err, result) {
+        assert.equal(result, null);
         assert.equal(err.res, "login fail");
     });
     try {

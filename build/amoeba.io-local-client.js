@@ -1,16 +1,23 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-LocalClient = function(use) {
-    this.use = use;
+LocalClient = function(entity) {
+    this.entity = entity;
 };
 
-/**
- * Main point
- * @param  {Object}   context       Object store request, response
- * @param  {Function} callback      function(err, result){}
- * @return
- */
-LocalClient.prototype.invoke = function(context, callback) {
-    if (this.use[context.request.method]) {
+LocalClient.prototype.init = function(amoeba, oncomplete) {
+    //initialize emit function
+    this.entity.emit = function(event, data) {
+        amoeba.emit(event, data);
+    };
+    if (oncomplete) {
+        oncomplete(null, {
+            success: true
+        });
+    }
+};
+
+LocalClient.prototype.invoke = function(context, next) {
+    //    callback
+    if (this.entity[context.request.method]) {
         //no params
         var params = [];
         if (typeof(context.request.params) == "undefined") {
@@ -21,33 +28,21 @@ LocalClient.prototype.invoke = function(context, callback) {
         } else {
             params = context.request.params.slice(0);
         }
-        if (typeof(callback) != "undefined") {
-            params.push(callback);
+
+        if (context.response) {
+            params.push(function(err, result) {
+                context.response.error = err;
+                context.response.result = result;
+                next();
+            });
         }
-        this.use[context.request.method].apply(this.use, params);
+        this.entity[context.request.method].apply(this.entity, params);
 
     } else {
-        throw new Error("Object '" + context.request.use + "' has no method '" + context.request.method + "'");
+        throw new Error("Object '" + context.request.path + "' has no method '" + context.request.method + "'");
     }
 };
 
-LocalClient.prototype.on = function(use, event, callback, onadded) {
-    this.use.on(event, callback);
-    if (onadded) {
-        onadded(null, {
-            success: true
-        });
-    }
-};
-
-LocalClient.prototype.removeListener = function(use, event, listener, onremoved) {
-    this.use.removeListener(event, listener);
-    if (onremoved) {
-        onremoved(null, {
-            success: true
-        });
-    }
-};
 module.exports = exports = LocalClient;
 
 },{}]},{},[1]);

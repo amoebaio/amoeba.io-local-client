@@ -1,72 +1,24 @@
 var assert = require("assert");
-var Amoeba = require("amoeba.io");
+var Amoeba = require("../../amoeba.io");
 var LocalClient = require("../lib/amoeba-local-client");
 
-var tester = 0;
+var tester = {};
 
-Auth = function() {
-
-};
-
-Auth.prototype.method1 = function(callback) {
-    tester = 1;
-    if(callback){
-        assert.ok(false);
-    }
-};
-
-Auth.prototype.method2 = function(callback) {
-    callback(null, "ok");
-};
-
-Auth.prototype.method3 = function(param, callback) {
-    tester = param.set;
-    if(callback){
-        assert.ok(false);
-    }
-};
-Auth.prototype.method4 = function(param1, param2, param3, callback) {
-    tester = param1 + param2 + param3;
-    if(callback){
-        assert.ok(false);
-    }
-};
-Auth.prototype.method5 = function(param, callback) {
-    callback(null, param.set);
-};
-Auth.prototype.method6 = function(param1, param2, param3, callback) {
-    callback(null, param1 + param2 + param3);
-};
-
-Auth.prototype.scopeTest = function(data, callback) {
-    this.login(data, callback);
-};
-
-Auth.prototype.login = function(data, callback) {
-    if (data.login == "admin" && data.password == "admin") {
-        callback(null, {
-            "res": "login ok"
-        });
-    } else {
-        callback({
-            "res": "login fail"
-        }, null);
-    }
-};
+require("../data/auth.js");
 
 describe('LocalClient', function() {
     var amoeba;
 
     beforeEach(function() {
-        tester = 0;
+        tester.res = 0;
         amoeba = new Amoeba();
-        amoeba.use("auth", new LocalClient(new Auth()));
+        amoeba.use("auth").as(new LocalClient(new Auth(tester)));
     });
 
     it('#invoke empty method', function(done) {
         amoeba.use("auth").invoke("method1");
         setTimeout(function() {
-            assert.equal(tester, 1);
+            assert.equal(tester.res, 1);
             done();
         }, 10);
     });
@@ -83,7 +35,7 @@ describe('LocalClient', function() {
             "set": 5
         });
         setTimeout(function() {
-            assert.equal(tester, 5);
+            assert.equal(tester.res, 5);
             done();
         }, 10);
     });
@@ -91,7 +43,7 @@ describe('LocalClient', function() {
     it('#invoke params method without callback', function(done) {
         amoeba.use("auth").invoke("method4", [1, 2, 3]);
         setTimeout(function() {
-            assert.equal(tester, 6);
+            assert.equal(tester.res, 6);
             done();
         }, 10);
     });
@@ -159,4 +111,38 @@ describe('LocalClient', function() {
             assert.equal(e.message, "Object 'auth' has no method 'unlogin'");
         }
     });
+
+    it('#on', function(done) {
+        amoeba.use("auth").on("updated", function() {
+            done();
+        });
+
+        amoeba.use("auth").invoke("event1");
+    });
+
+    it('#on auth:*', function(done) {
+        amoeba.use("auth").on("*", function() {
+            done();
+        });
+
+        amoeba.use("auth").invoke("event1");
+    });
+    
+    it('#on *:updated', function(done) {
+        amoeba.use("*").on("updated", function() {
+            done();
+        });
+
+        amoeba.use("auth").invoke("event1");
+    });
+
+    it('#on *:*', function(done) {
+        amoeba.use("*").on("*", function() {
+            done();
+        });
+
+        amoeba.use("auth").invoke("event1");
+    });
+
+
 });
