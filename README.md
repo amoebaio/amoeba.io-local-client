@@ -1,2 +1,6 @@
-# amoeba.io-local-client
-Local Client for amoeba.io
+#Local Client for amoeba.io
+
+##Installation
+```
+npm install amoeba.io-local-client
+```
