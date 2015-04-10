@@ -13,7 +13,7 @@
     <script type="text/javascript">
         var tester = {};
         var amoeba = new Amoeba();
-        amoeba.use("auth").as(new LocalClient(new Auth(tester)));
+        amoeba.path("auth").as(new LocalClient(new Auth(tester)));
     </script>
 
 

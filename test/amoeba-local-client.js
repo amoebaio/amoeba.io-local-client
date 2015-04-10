@@ -12,11 +12,11 @@ describe('LocalClient', function() {
     beforeEach(function() {
         tester.res = 0;
         amoeba = new Amoeba();
-        amoeba.use("auth").as(new LocalClient(new Auth(tester)));
+        amoeba.path("auth").as(new LocalClient(new Auth(tester)));
     });
 
     it('#invoke empty method', function(done) {
-        amoeba.use("auth").invoke("method1");
+        amoeba.path("auth").invoke("method1");
         setTimeout(function() {
             assert.equal(tester.res, 1);
             done();
@@ -24,14 +24,14 @@ describe('LocalClient', function() {
     });
 
     it('#invoke empty method with callback', function(done) {
-        amoeba.use("auth").invoke("method2", function(err, data) {
+        amoeba.path("auth").invoke("method2", function(err, data) {
             assert.equal(data, "ok");
             done();
         });
     });
 
     it('#invoke param method without callback', function(done) {
-        amoeba.use("auth").invoke("method3", {
+        amoeba.path("auth").invoke("method3", {
             "set": 5
         });
         setTimeout(function() {
@@ -41,7 +41,7 @@ describe('LocalClient', function() {
     });
 
     it('#invoke params method without callback', function(done) {
-        amoeba.use("auth").invoke("method4", [1, 2, 3]);
+        amoeba.path("auth").invoke("method4", [1, 2, 3]);
         setTimeout(function() {
             assert.equal(tester.res, 6);
             done();
@@ -49,7 +49,7 @@ describe('LocalClient', function() {
     });
 
     it('#invoke param method with callback', function(done) {
-        amoeba.use("auth").invoke("method5", {
+        amoeba.path("auth").invoke("method5", {
             "set": 5
         }, function(err, result) {
             assert.equal(result, 5);
@@ -58,7 +58,7 @@ describe('LocalClient', function() {
     });
 
     it('#invoke params method with callback', function(done) {
-        amoeba.use("auth").invoke("method6", [1, 2, 3], function(err, result) {
+        amoeba.path("auth").invoke("method6", [1, 2, 3], function(err, result) {
             assert.equal(result, 6);
             done();
         });
@@ -66,7 +66,7 @@ describe('LocalClient', function() {
 
 
     it('#invoke success', function(done) {
-        amoeba.use("auth").invoke("login", {
+        amoeba.path("auth").invoke("login", {
             login: 'admin',
             password: 'admin'
         }, function(err, data) {
@@ -78,7 +78,7 @@ describe('LocalClient', function() {
 
     it('#invoke error', function(done) {
 
-        amoeba.use("auth").invoke("login", {
+        amoeba.path("auth").invoke("login", {
             login: 'admins',
             password: 'admin'
         }, function(err, data) {
@@ -89,7 +89,7 @@ describe('LocalClient', function() {
     });
 
     it('#invoke scope test', function(done) {
-        amoeba.use("auth").invoke("scopeTest", {
+        amoeba.path("auth").invoke("scopeTest", {
             login: 'admin',
             password: 'admin'
         }, function(err, data) {
@@ -101,7 +101,7 @@ describe('LocalClient', function() {
 
     it('#invoke unknown method', function() {
         try {
-            amoeba.use("auth").invoke("unlogin", {
+            amoeba.path("auth").invoke("unlogin", {
                 login: 'admins',
                 password: 'admin'
             }, function(err, data) {
@@ -113,35 +113,35 @@ describe('LocalClient', function() {
     });
 
     it('#on', function(done) {
-        amoeba.use("auth").on("updated", function() {
+        amoeba.path("auth").on("updated", function() {
             done();
         });
 
-        amoeba.use("auth").invoke("event1");
+        amoeba.path("auth").invoke("event1");
     });
 
     it('#on auth:*', function(done) {
-        amoeba.use("auth").on("*", function() {
+        amoeba.path("auth").on("*", function() {
             done();
         });
 
-        amoeba.use("auth").invoke("event1");
+        amoeba.path("auth").invoke("event1");
     });
-    
+
     it('#on *:updated', function(done) {
-        amoeba.use("*").on("updated", function() {
+        amoeba.path("*").on("updated", function() {
             done();
         });
 
-        amoeba.use("auth").invoke("event1");
+        amoeba.path("auth").invoke("event1");
     });
 
     it('#on *:*', function(done) {
-        amoeba.use("*").on("*", function() {
+        amoeba.path("*").on("*", function() {
             done();
         });
 
-        amoeba.use("auth").invoke("event1");
+        amoeba.path("auth").invoke("event1");
     });
 
 
