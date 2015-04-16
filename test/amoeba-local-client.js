@@ -1,5 +1,5 @@
 var assert = require("assert");
-var Amoeba = require("../../amoeba.io");
+var Amoeba = require("amoeba.io");
 var LocalClient = require("../lib/amoeba-local-client");
 
 var tester = {};
@@ -41,7 +41,7 @@ describe('LocalClient', function() {
     });
 
     it('#invoke params method without callback', function(done) {
-        amoeba.path("auth").invoke("method4", [1, 2, 3]);
+        amoeba.path("auth").invoke("method4", 1, 2, 3);
         setTimeout(function() {
             assert.equal(tester.res, 6);
             done();
@@ -58,7 +58,7 @@ describe('LocalClient', function() {
     });
 
     it('#invoke params method with callback', function(done) {
-        amoeba.path("auth").invoke("method6", [1, 2, 3], function(err, result) {
+        amoeba.path("auth").invoke("method6", 1, 2, 3, function(err, result) {
             assert.equal(result, 6);
             done();
         });

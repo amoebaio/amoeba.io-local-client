@@ -16,27 +16,22 @@ LocalClient.prototype.init = function(amoeba, oncomplete) {
 };
 
 LocalClient.prototype.invoke = function(context, next) {
-    //    callback
+
     if (this.entity[context.request.method]) {
-        //no params
-        var params = [];
-        if (typeof(context.request.params) == "undefined") {
-            //one param
-        } else if (typeof(context.request.params.length) == "undefined") {
-            params = [context.request.params];
-            //array of params
-        } else {
-            params = context.request.params.slice(0);
-        }
+        //clone arguments
+        var args = Array.prototype.slice.call(context.request.arguments);
 
         if (context.response) {
-            params.push(function(err, result) {
+            args.push(function(err, result) {
                 context.response.error = err;
                 context.response.result = result;
                 next();
             });
         }
-        this.entity[context.request.method].apply(this.entity, params);
+        this.entity[context.request.method].apply(this.entity, args);
+        if (!context.response) {
+            next();
+        }
 
     } else {
         throw new Error("Object '" + context.request.path + "' has no method '" + context.request.method + "'");
