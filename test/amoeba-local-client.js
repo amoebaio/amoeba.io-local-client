@@ -1,5 +1,5 @@
 var assert = require("assert");
-var Amoeba = require("amoeba.io");
+var Amoeba = require("../../amoeba.io");
 var LocalClient = require("../lib/amoeba-local-client");
 
 var tester = {};
